@@ -1,103 +1,216 @@
-import Image from "next/image";
+'use client';
+
+import { Navigation } from '@/components/Navigation';
+import { Button } from '@/components/ui/Button';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { ArrowRightIcon, CalendarIcon, CheckCircleIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [cursorVariant, setCursorVariant] = useState('default');
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    const mouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: e.clientX,
+        y: e.clientY
+      });
+    };
+
+    window.addEventListener("mousemove", mouseMove);
+    return () => {
+      window.removeEventListener("mousemove", mouseMove);
+    };
+  }, []);
+
+  const variants = {
+    default: {
+      x: mousePosition.x - 16,
+      y: mousePosition.y - 16,
+      transition: {
+        type: "spring",
+        mass: 0.6
+      }
+    },
+    text: {
+      x: mousePosition.x - 32,
+      y: mousePosition.y - 32,
+      height: 64,
+      width: 64,
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      transition: {
+        type: "spring",
+        mass: 0.6
+      }
+    }
+  };
+
+  const features = [
+    {
+      icon: CheckCircleIcon,
+      title: "Track Tasks",
+      description: "Manage your assignments with ease",
+      delay: 0.2
+    },
+    {
+      icon: CalendarIcon,
+      title: "Smart Calendar",
+      description: "Never miss important deadlines",
+      delay: 0.4
+    },
+    {
+      icon: SparklesIcon,
+      title: "Stay Organized",
+      description: "Keep your courses well structured",
+      delay: 0.6
+    }
+  ];
+
+  return (
+    <main className="min-h-screen bg-gray-900 text-white relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 via-primary-900/5 to-gray-900" />
+      
+      {/* Animated background patterns */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute w-[500px] h-[500px] -top-40 -right-40 bg-primary-500/20 rounded-full blur-3xl" />
+        <div className="absolute w-[500px] h-[500px] top-[20%] -left-40 bg-primary-600/20 rounded-full blur-3xl" />
+        <div className="absolute w-[800px] h-[800px] bottom-[-100px] right-[-100px] bg-primary-700/20 rounded-full blur-3xl" />
+      </div>
+
+      {/* Custom cursor */}
+      <motion.div
+        className="fixed top-0 left-0 w-8 h-8 bg-white/30 rounded-full pointer-events-none z-50 backdrop-blur-sm hidden md:block"
+        variants={variants}
+        animate={cursorVariant}
+      />
+
+      <Navigation />
+
+      <div className="relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            className="text-center space-y-8"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+              className="relative inline-block"
+            >
+              <motion.h1
+                className="text-5xl md:text-7xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
+                onMouseEnter={() => setCursorVariant("text")}
+                onMouseLeave={() => setCursorVariant("default")}
+              >
+                Manage Your Courses
+              </motion.h1>
+              <motion.div
+                initial={{ width: "0%" }}
+                animate={{ width: "100%" }}
+                transition={{ duration: 1, delay: 0.5 }}
+                className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-primary-500 to-primary-700"
+              />
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-4xl md:text-6xl font-bold text-primary-500"
+              onMouseEnter={() => setCursorVariant("text")}
+              onMouseLeave={() => setCursorVariant("default")}
+            >
+              Track Your Progress
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="max-w-3xl mx-auto text-xl text-gray-300"
+            >
+              A modern course management system to help you organize your studies,
+              track assignments, and never miss a deadline.
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            >
+              <Link href="/courses">
+                <Button
+                  className="group relative px-8 py-3 text-lg overflow-hidden hover:text-white transition-colors"
+                  onMouseEnter={() => setCursorVariant("text")}
+                  onMouseLeave={() => setCursorVariant("default")}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-primary-600 to-primary-500"
+                    initial={{ x: "-100%" }}
+                    whileHover={{ x: "0%" }}
+                    transition={{ duration: 0.3 }}
+                  />
+                  <span className="relative flex items-center">
+                    Get Started
+                    <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </Button>
+              </Link>
+              <Link href="/calendar">
+                <Button
+                  variant="ghost"
+                  className="px-8 py-3 text-lg border border-gray-400/30 hover:border-primary-500 hover:bg-primary-500/10 backdrop-blur-sm text-white transition-all duration-300 relative group"
+                  onMouseEnter={() => setCursorVariant("text")}
+                  onMouseLeave={() => setCursorVariant("default")}
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-primary-400/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    initial={{ scale: 0.95 }}
+                    whileHover={{ scale: 1 }}
+                  />
+                  <span className="relative flex items-center">
+                    <CalendarIcon className="w-5 h-5 mr-2" />
+                    View Calendar
+                  </span>
+                </Button>
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          {/* Features section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mt-32 grid grid-cols-1 md:grid-cols-3 gap-8"
           >
-            Read our docs
-          </a>
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: feature.delay }}
+                className="relative group"
+                onMouseEnter={() => setCursorVariant("text")}
+                onMouseLeave={() => setCursorVariant("default")}
+              >
+                <div className="relative z-10 p-8 rounded-2xl bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 transition-colors group-hover:bg-gray-800/70">
+                  <feature.icon className="w-8 h-8 text-primary-500 mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-gray-400">{feature.description}</p>
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-primary-700/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
